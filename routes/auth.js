@@ -25,6 +25,7 @@ router.post('/signup', async (req, res) => {
         const result = await db.collection('users').insertOne({
             username,
             passwordHash,
+            role: 'user'
         });
 
         res.status(201).json({ message: 'User created', userId: result.insertedId });
@@ -52,7 +53,8 @@ router.post('/login', async (req, res) => {
         const token = JWT.sign(
             {
                 userId: user._id.toString(),
-                username: user.username
+                username: user.username,
+                role: user.role
             },
             JWT_KEY
         );

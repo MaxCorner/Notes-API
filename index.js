@@ -6,16 +6,18 @@ const app = express();
 const PORT = 1234;
 const authRoutes = require('./routes/auth');
 const notesRoutes = require('./routes/notes');
+const adminRoutes = require('./routes/admin');
 
 app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/notes', notesRoutes);
+app.use('/admin', adminRoutes);
 
 connectToDB().then(() => {
     app.locals.db = getDB();
 
     app.get('/', (req, res) => {
-        res.send('Welcome to the Scheduler API!')
+        res.send('Welcome to the Notes API!')
     });
 
     app.listen(PORT, () => {
