@@ -17,7 +17,6 @@ router.get('/dashboard', authToken, isAdmin, async (req, res) => {
             notes,
         });
     } catch (err) {
-        consolele.log(err);
         res.status(500).json({ error: 'Failed to load Admin Dashboard' });
     }
 });

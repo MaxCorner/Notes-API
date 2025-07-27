@@ -1,3 +1,5 @@
 # Notes API
 
-Still in progress
+Codded fully by myself. Only useing AI to debug my code.
+
+Still in progress.
