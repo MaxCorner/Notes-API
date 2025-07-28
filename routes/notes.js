@@ -51,4 +51,54 @@ router.post('/', authToken, async (req, res) => {
     }
 });
 
+router.put('/:id', authToken, async (req, res) => {
+    const { id } = req.params;
+    const { note } = req.body;
+
+    try {
+        const db = req.app.locals.db;
+        const objectId = new ObjectId(id);
+        const updateFields = {};
+        const updateResult = await db.collection('notes').updateOne(query, { $set: updateFields });
+        const updateNote = await db.collection('notes').findOne({ _id: objectId });
+
+        if (task !== undefined) updateFields.note = note;
+
+        if (Object.keys(updateFields).length === 0) {
+            return res.status(400).json({ error: 'No valid fields to update' });
+        }
+
+        if (updateResult.matchedCount === 0) {
+            return res.status(404).json({ error: 'Note not found or not authorized' });
+        }
+
+        res.json(updateNote);
+    } catch (err) {
+        console.log(err); // just here for debugging intill i make sure it works
+        res.status(500).json({ error: 'Failed to update note' });
+    }
+});
+
+router.delete('/:id', authToken, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const db = req.app.locals.db;
+        const objectId = new ObjectId(id);
+        const query = { _id: objectId, userId: req.user.userId };
+        const note = await db.collection('notes').findOne(query);
+
+        if (!note) {
+            return res.status(404).json({ error: 'Note not found or not authorized' });
+        }
+
+        await db.collection('notes').deleteOne(query);
+
+        res.json(todo);
+    } catch (err) {
+        console.error(err) // here same for put just for debugging
+        res.status(500).json({ error: 'Failed to delete note' });
+    }
+});
+
 module.exports = router;
