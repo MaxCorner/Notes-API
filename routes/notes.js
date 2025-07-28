@@ -59,10 +59,11 @@ router.put('/:id', authToken, async (req, res) => {
         const db = req.app.locals.db;
         const objectId = new ObjectId(id);
         const updateFields = {};
+        const query = { _id: objectId, userId: req.user.userId };
         const updateResult = await db.collection('notes').updateOne(query, { $set: updateFields });
         const updateNote = await db.collection('notes').findOne({ _id: objectId });
 
-        if (task !== undefined) updateFields.note = note;
+        if (note !== undefined) updateFields.note = note;
 
         if (Object.keys(updateFields).length === 0) {
             return res.status(400).json({ error: 'No valid fields to update' });
